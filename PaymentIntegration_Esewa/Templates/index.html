@@ -1,0 +1,224 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eSewa Payment Gateway</title>
+    <link rel="stylesheet" href="{% static "style.css" %}">
+  </head>
+  <body>
+    <div class="payment-container">
+      <div class="payment-header">
+        <div class="esewa-logo">eSewa</div>
+        <div class="payment-subtitle">Secure Payment Gateway</div>
+      </div>
+
+      <form
+        action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+        method="POST"
+        class="payment-form"
+      >
+        <div class="amount-display">
+          <div class="amount-label">Total Amount</div>
+          <div class="amount-value">
+            <span class="currency">NPR</span>110
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title">Payment Details</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input
+                type="text"
+                id="amount"
+                name="amount"
+                value="100"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="tax_amount">Tax Amount</label>
+              <input
+                type="text"
+                id="tax_amount"
+                name="tax_amount"
+                value="10"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="total_amount">Total Amount</label>
+            <input
+              type="text"
+              id="total_amount"
+              name="total_amount"
+              value="{{total_amount}}"  
+              {% comment %} Added default value. see Esewa.views -- paymentHandler{% endcomment %}
+              required
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+          <div class="section-title">Transaction Information</div>
+
+          <div class="form-group">
+            <label for="transaction_uuid">Transaction ID</label>
+            <input
+              type="text"
+              id="transaction_uuid"
+              name="transaction_uuid"
+              value="{{transaction_uuid}}"
+              required
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="product_code">Product Code</label>
+            <input
+              type="text"
+              id="product_code"
+              name="product_code"
+              value="{{product_code}}"
+                {% comment %} Added default value. see Esewa.views -- paymentHandler{% endcomment %}
+              required
+              readonly
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              {% comment %} <label for="product_service_charge">Service Charge</label> {% endcomment %}
+              <input
+                type="hidden"
+                id="product_service_charge"
+                name="product_service_charge"
+                value="0"
+                required
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              {% comment %} <label for="product_delivery_charge">Delivery Charge</label> {% endcomment %}
+              <input
+                type="hidden"
+                id="product_delivery_charge"
+                name="product_delivery_charge"
+                value="0"
+                required
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+          {% comment %} <div class="section-title">Configuration</div> {% endcomment %}
+
+          <div class="form-group">
+            {% comment %} <label for="success_url">Success URL</label> {% endcomment %}
+            <input
+              type="hidden"
+              id="success_url"
+              name="success_url"
+              value="https://developer.esewa.com.np/success"
+              required
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            {% comment %} <label for="failure_url">Failure URL</label> {% endcomment %}
+            <input
+              type="hidden"
+              id="failure_url"
+              name="failure_url"
+              value="https://developer.esewa.com.np/failure"
+              required
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            {% comment %} <label for="signed_field_names">Signed Fields</label> {% endcomment %}
+            <input
+              type="hidden"
+              id="signed_field_names"
+              name="signed_field_names"
+              value="total_amount,transaction_uuid,product_code"
+              required
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            {% comment %} <label for="signature">Signature</label> {% endcomment %}
+            <input
+              type="hidden"
+              id="signature"
+              name="signature"
+              value="{{signature}}"
+              required
+              readonly
+            />
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <span>Proceed to Payment</span>
+        </button>
+
+        <div class="secure-badge">
+          <svg
+            class="secure-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 1.5a.75.75 0 01.75.75V4.5a.75.75 0 01-1.5 0V2.25A.75.75 0 0112 1.5zM5.636 4.136a.75.75 0 011.06 0l1.592 1.591a.75.75 0 01-1.061 1.06l-1.591-1.59a.75.75 0 010-1.061zm12.728 0a.75.75 0 010 1.06l-1.591 1.592a.75.75 0 01-1.06-1.061l1.59-1.591a.75.75 0 011.061 0zm-6.816 4.496a.75.75 0 01.82.311l5.228 7.917a.75.75 0 01-.777 1.148l-2.097-.43 1.045 3.9a.75.75 0 01-1.45.388l-1.044-3.899-1.601 1.42a.75.75 0 01-1.247-.606l.569-9.47a.75.75 0 01.554-.68zM3 10.5a.75.75 0 01.75-.75H6a.75.75 0 010 1.5H3.75A.75.75 0 013 10.5zm14.25 0a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H18a.75.75 0 01-.75-.75zm-8.962 3.712a.75.75 0 010 1.061l-1.591 1.591a.75.75 0 11-1.061-1.06l1.591-1.592a.75.75 0 011.06 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Secured by eSewa Payment Gateway
+        </div>
+      </form>
+    </div>
+
+    <script>
+      // Add loading state on form submission
+      document.querySelector("form").addEventListener("submit", function (e) {
+        const btn = this.querySelector(".submit-btn");
+        btn.classList.add("loading");
+        btn.querySelector("span").textContent = "Processing...";
+      });
+
+      // Add subtle input animations
+      document.querySelectorAll('input[type="text"]').forEach((input) => {
+        input.addEventListener("focus", function () {
+          this.parentElement.style.transform = "scale(1.02)";
+          this.parentElement.style.transition = "transform 0.2s ease";
+        });
+
+        input.addEventListener("blur", function () {
+          this.parentElement.style.transform = "scale(1)";
+        });
+      });
+    </script>
+  </body>
+</html>
